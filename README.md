@@ -1,5 +1,6 @@
 ## 基于Redis的延迟消息队列
-参考[有赞延迟队列](https://tech.youzan.com/queuing_delay/)思路设计
+参考[有赞延迟队列](https://tech.youzan.com/queuing_delay/)
+参考[delay-queue](https://github.com/yangwenjie88/delay-queue)
 
 ## 实现功能
    实现了一个带有延迟功能的消息队列. 所谓延迟功能, 即消息(任务)在到达后, 可以选择暂时不执行, 必须达到指定的时间才能被执行, 该时间可以理解为"最早  
