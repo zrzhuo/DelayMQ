@@ -1,5 +1,5 @@
 ## 基于Redis的延迟消息队列
-参考[有赞延迟队列](https://tech.youzan.com/queuing_delay/)
+参考[有赞延迟队列](https://tech.youzan.com/queuing_delay/)  
 参考[delay-queue](https://github.com/yangwenjie88/delay-queue)
 
 ## 实现功能
