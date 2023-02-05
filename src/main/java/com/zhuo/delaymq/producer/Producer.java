@@ -1,6 +1,6 @@
 package com.zhuo.delaymq.producer;
 
-import com.zhuo.delaymq.core.DelayQueue;
+import com.zhuo.delaymq.core.DelayMQ;
 import com.zhuo.delaymq.core.Job;
 import com.zhuo.delaymq.util.SnowflakeIdUtil;
 import com.zhuo.delaymq.util.SnowflakeIdWorker;
@@ -9,13 +9,13 @@ import com.zhuo.delaymq.util.SnowflakeIdWorker;
  * 生产者
  */
 public class Producer {
-    private  SnowflakeIdWorker idWorker;
+    private final SnowflakeIdWorker idWorker;
 
-    private DelayQueue delayQueue;
+    private final DelayMQ delayMQ;
 
-    public Producer(DelayQueue delayQueue){
-        idWorker = SnowflakeIdUtil.getSnowflakeIdWorker();
-        this.delayQueue = delayQueue;
+    public Producer(DelayMQ delayMQ){
+        this.idWorker = SnowflakeIdUtil.getSnowflakeIdWorker();
+        this.delayMQ = delayMQ;
     }
 
     /**
@@ -23,6 +23,6 @@ public class Producer {
      */
     public void product(long delayTime, long ttrTime, String topic, String message){
         Job job = new Job(idWorker.nextId(), delayTime, ttrTime, topic, message);
-        delayQueue.push(job);
+        delayMQ.push(job);
     }
 }

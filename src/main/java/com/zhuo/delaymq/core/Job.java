@@ -10,25 +10,25 @@ public class Job {
     /**
      * 任务的唯一标识
      */
-    private long id;
+    private Long id;
 
     /**
      * 任务的执行时间
      */
-    private long delayTime;
+    private Long delayTime;
 
     /**
      * 任务的执行超时时间, 单位为毫秒
      */
-    private long ttrTime;
+    private Long ttrTime;
 
     /**
-     * 任务类型(具体业务类型)
+     * 任务的消息类型
      */
     private String topic;
 
     /**
-     * 任务的消息内容，用于处理具体业务逻辑
+     * 任务的消息内容，用于消费者进行具体业务处理
      */
     private String message;
 
@@ -43,7 +43,7 @@ public class Job {
         this.message = message;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -59,7 +59,7 @@ public class Job {
         this.topic = topic;
     }
 
-    public long getDelayTime() {
+    public Long getDelayTime() {
         return delayTime;
     }
 
@@ -67,7 +67,7 @@ public class Job {
         this.delayTime = delayTime;
     }
 
-    public long getTtrTime() {
+    public Long getTtrTime() {
         return ttrTime;
     }
 

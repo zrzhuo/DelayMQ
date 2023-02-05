@@ -6,46 +6,67 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 一个有序队列, 其元素为JobItem对象, 队列按delayTime排序. 使用redis的SortedSet实现
+ * 一个有序队列, 其元素为Job的Id, 队列按delayTime排序. 使用redis的SortedSet实现
  */
 public class DelayBucket {
 
     private static final Logger logger = LoggerFactory.getLogger(DelayBucket.class);
 
     private final String name;
+    private final int bucketNumber;
 
-    public DelayBucket(String name) {
+    public DelayBucket(String name, int bucketNumber) {
         this.name = name;
+        this.bucketNumber = bucketNumber;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getBucketNumber() {
+        return bucketNumber;
+    }
+
+
     /**
-     * 添加jobItem到指定的bucket中
+     * 根据jobId计算其应该放置的bucket的key
      */
-    public void addToBucket(String bucketKey, JobItem jobItem) {
-        RScoredSortedSet<JobItem> scoredSortedSet = RedissonUtils.getScoredSortedSet(name + ":" + bucketKey);
-        scoredSortedSet.add(jobItem.getDelayTime(), jobItem);
+    private long computeBucketKey(long jodId) {
+        return Math.floorMod(jodId, bucketNumber);
     }
 
     /**
-     * 从指定的bucket中获取delayTime最小的jodItem
+     * 添加jobId到指定的bucket中
      */
-    public JobItem getFromBucket(String bucketKey) {
-        RScoredSortedSet<JobItem> scoredSortedSet = RedissonUtils.getScoredSortedSet(name + ":" + bucketKey);
+    public void add(Long jobId, Long delayTime) {
+        String bucketId = name + ":" + computeBucketKey(jobId);
+        logger.info(String.format("add job<%s> to bucket<%s>", jobId, bucketId));
+        RedissonUtils.getScoredSortedSet(bucketId).add(delayTime, jobId);
+    }
+
+    /**
+     * 从指定的bucket中获取delayTime最小的jodId
+     */
+    public Long getFirstJobId(int bucketKey) {
+        String bucketId = name + ":" + bucketKey;
+        RScoredSortedSet<Long> scoredSortedSet = RedissonUtils.getScoredSortedSet(name + ":" + bucketKey);
         if (scoredSortedSet.size() == 0) {
+            logger.error(String.format("bucket<%s> is empty", bucketId));
             return null;
         }
-        return scoredSortedSet.first();
+        Long result = scoredSortedSet.first();
+        logger.info(String.format("get job<%s> from bucket<%s>", result.toString(), bucketId));
+        return result;
     }
 
+
     /**
-     * 从指定的bucket中移除给定的jodItem
+     * 从指定的bucket中移除给定的jodId
      */
-    public void removeFromBucket(String bucketKey, JobItem jobItem) {
-        RScoredSortedSet<JobItem> scoredSortedSet = RedissonUtils.getScoredSortedSet(name + ":" + bucketKey);
-        scoredSortedSet.remove(jobItem);
+    public void remove(Long jobId) {
+        String bucketId = name + ":" + computeBucketKey(jobId);
+        logger.info(String.format("remove job<%s> to bucket<%s>", jobId, bucketId));
+        RedissonUtils.getScoredSortedSet(bucketId).remove(jobId);
     }
 }

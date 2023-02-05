@@ -1,10 +1,11 @@
 package com.zhuo.delaymq;
 
-import com.zhuo.delaymq.core.DelayQueue;
+import com.zhuo.delaymq.core.DelayMQ;
+
 
 public class StartService {
     public static void main(String[] args) {
-        DelayQueue delayQueue = new DelayQueue("DelayQueue", 3);
-        delayQueue.startTimers();
+        DelayMQ delayMQ = new DelayMQ("DelayMQ", 3);
+        delayMQ.run();
     }
 }
