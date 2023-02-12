@@ -24,7 +24,7 @@ Job类包含以下属性:
 4. reserved：已被消费者取出，但还未得到消费者的响应(delete、finish), 此时该Job仍处于JobPool和DelayBucket中, 直到得到响应. 若经过ttrTime  
    后仍未得到相应, 则重新进入ready状态
 
-![img.png](img/img1.png)
+![img.png](doc/img/img1.png)
 
 
 ## 整体结构
@@ -34,7 +34,7 @@ Job类包含以下属性:
 3. ReadyQueue: 存放处于ready状态的Job, 以供消费程序消费. 只存放id. 这里用redis的list(BlockingQueue)实现
 4. Timer: 负责实时扫描Bucket, 将delayTime小于等于当前时间的Job放入到ReadyQueue的对应topic, 此时该Job由delay状态变为ready状态.
 
-![img.png](img/img.png)
+![img.png](doc/img/img.png)
 
 
 

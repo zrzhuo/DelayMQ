@@ -62,7 +62,7 @@ public class DelayBucket {
 
 
     /**
-     * 从指定的bucket中移除给定的jodId
+     * 移除给定的jodId
      */
     public void remove(Long jobId) {
         String bucketId = name + ":" + computeBucketKey(jobId);
